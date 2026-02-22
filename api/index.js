@@ -8,20 +8,17 @@ dotenv.config();
 
 const app = express();
 
-// IMPORTANT for Vercel
-const rootDir = path.join(__dirname, "..");
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Static files
-app.use(express.static(path.join(rootDir, "public")));
+// Static
+app.use(express.static(path.join(__dirname, "../public")));
 
-// View Engine
+// View engine
 app.set("view engine", "ejs");
-app.set("views", path.join(rootDir, "views"));
+app.set("views", path.join(__dirname, "../views"));
 
 // Routes
 app.use(require("../routes/authRoutes"));
@@ -30,19 +27,35 @@ app.use(require("../routes/jobRoutes"));
 app.use(require("../routes/candidateRoutes"));
 app.use(require("../routes/analyticsRoutes"));
 
-// MongoDB Connection
-if (!mongoose.connection.readyState) {
-  mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
+// Mongo connection (IMPORTANT FIX)
+let isConnected = false;
+
+async function connectDB() {
+  if (isConnected) return;
+
+  const db = await mongoose.connect(process.env.MONGO_URI);
+  isConnected = db.connections[0].readyState === 1;
+  console.log("MongoDB Connected");
 }
 
-// Home Route
-app.get("/", (req, res) => {
+// Root route
+app.get("/", async (req, res) => {
+  await connectDB();
   res.render("home");
 });
 
+// Ensure DB connects before any request
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
+// Export for Vercel
 module.exports = app;
+
+// Local only
+if (process.env.NODE_ENV !== "production") {
+  app.listen(5000, () => {
+    console.log("Server running on http://localhost:5000");
+  });
+}
