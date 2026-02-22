@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 
-dotenv.config();
 
 const app = express();
 
@@ -14,11 +13,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Static files
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.resolve("./public")));
 
 // View Engine
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../views"));
+app.set("views", path.resolve("./views"));
+
 
 // Routes
 app.use(require("../routes/authRoutes"));
@@ -27,10 +27,16 @@ app.use(require("../routes/jobRoutes"));
 app.use(require("../routes/candidateRoutes"));
 app.use(require("../routes/analyticsRoutes"));
 
-// MongoDB Connection (IMPORTANT: prevent multiple connections)
-if (!mongoose.connections[0].readyState) {
-  mongoose.connect(process.env.MONGO_URI);
-}
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) return;
+
+  const db = await mongoose.connect(process.env.MONGO_URI);
+  isConnected = db.connections[0].readyState;
+};
+
+connectDB();
 
 // Home route
 app.get("/", (req, res) => {
