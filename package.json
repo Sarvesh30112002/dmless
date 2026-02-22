@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "dev": "nodemon api/index.js"
-},
+    "dev": "nodemon api/index.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "mongoose": "^9.2.1",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
+    "serverless-http": "^4.0.0",
     "streamifier": "^0.1.1",
     "uuid": "^13.0.0"
   },

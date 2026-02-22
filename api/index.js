@@ -8,49 +8,74 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
+/* -----------------------------
+   MONGODB CONNECTION (SAFE)
+------------------------------ */
+
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) return;
+
+  try {
+    const db = await mongoose.connect(process.env.MONGO_URI);
+    isConnected = db.connections[0].readyState;
+    console.log("MongoDB Connected");
+  } catch (err) {
+    console.log("MongoDB Error:", err);
+  }
+};
+
+connectDB();
+
+/* -----------------------------
+   MIDDLEWARE
+------------------------------ */
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Static files
 app.use(express.static(path.join(__dirname, "../public")));
 
-// View Engine
+/* -----------------------------
+   VIEW ENGINE
+------------------------------ */
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views"));
 
-const authRoutes = require("../routes/authRoutes");
-app.use(authRoutes);
+/* -----------------------------
+   ROUTES
+------------------------------ */
 
-const dashboardRoutes = require("../routes/dashboardRoutes");
-app.use(dashboardRoutes);
+app.use(require("../routes/authRoutes"));
+app.use(require("../routes/dashboardRoutes"));
+app.use(require("../routes/jobRoutes"));
+app.use(require("../routes/candidateRoutes"));
+app.use(require("../routes/analyticsRoutes"));
 
-const jobRoutes = require("../routes/jobRoutes");
-app.use(jobRoutes);
+/* -----------------------------
+   HOME
+------------------------------ */
 
-const candidateRoutes = require("../routes/candidateRoutes"); 
-app.use(candidateRoutes);
-
-const analyticsRoutes = require("../routes/analyticsRoutes");
-app.use(analyticsRoutes);
-
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
-
-// Test Route
 app.get("/", (req, res) => {
   res.render("home");
 });
 
-// For Vercel
+/* -----------------------------
+   EXPORT FOR VERCEL
+------------------------------ */
+
 module.exports = app;
 
-// For local development
+/* -----------------------------
+   LOCAL DEVELOPMENT ONLY
+------------------------------ */
+
 if (process.env.NODE_ENV !== "production") {
-  app.listen(5000, () => {
-    console.log("Server running on http://localhost:5000");
+  const PORT = 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
   });
 }
