@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Hiring Link</title>
+  <link rel="stylesheet" href="/css/create-job.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">dmless</div>
+</header>
+
+<main class="page">
+
+  <a href="/dashboard" class="back">← Back to Dashboard</a>
+
+  <h1>Create Hiring Link</h1>
+
+  <form action="/create-job" method="POST" id="jobForm">
+
+    <!-- Job details -->
+
+    <div class="card">
+
+      <h3>Job Details</h3>
+
+      <label>Job Title</label>
+      <input
+        type="text"
+        name="jobRole"
+        placeholder="e.g. Frontend Developer"
+        required
+      />
+
+      <label>Job Description</label>
+      <textarea
+        name="jobDescription"
+        placeholder="Describe the role, responsibilities, requirements..."
+        required
+      ></textarea>
+
+    </div>
+
+    <!-- Screening questions -->
+
+    <div class="section-head">
+      <h3>Screening Questions (<span id="count">1</span>/5)</h3>
+      <button type="button" class="add-btn" onclick="addQuestion()">+ Add Question</button>
+    </div>
+
+    <div id="questions">
+
+      <!-- Question 1 -->
+
+      <div class="question-card">
+
+        <h4>Question 1</h4>
+
+        <input
+          type="text"
+          name="questions[0]"
+          placeholder="Enter your question"
+          required
+        />
+
+        <div class="option">
+          <input type="radio" name="correct[0]" value="0" checked>
+          <input type="text" name="options[0][]" placeholder="Option 1" required>
+        </div>
+
+        <div class="option">
+          <input type="radio" name="correct[0]" value="1">
+          <input type="text" name="options[0][]" placeholder="Option 2" required>
+        </div>
+
+        <div class="option">
+          <input type="radio" name="correct[0]" value="2">
+          <input type="text" name="options[0][]" placeholder="Option 3" required>
+        </div>
+
+        <div class="option">
+          <input type="radio" name="correct[0]" value="3">
+          <input type="text" name="options[0][]" placeholder="Option 4" required>
+        </div>
+
+        <small>Select the radio button next to the correct answer</small>
+
+      </div>
+
+    </div>
+
+    <button type="submit" class="submit-btn">
+      Create Hiring Link
+    </button>
+
+  </form>
+
+</main>
+
+<script>
+let questionCount = 1;
+
+function addQuestion(){
+
+  if(questionCount >= 5){
+    alert("Maximum 5 questions allowed");
+    return;
+  }
+
+  const container = document.getElementById("questions");
+
+  const index = questionCount;
+
+  const div = document.createElement("div");
+  div.className = "question-card";
+
+  div.innerHTML = `
+    <h4>Question ${index + 1}</h4>
+
+    <input
+      type="text"
+      name="questions[${index}]"
+      placeholder="Enter your question"
+      required
+    />
+
+    <div class="option">
+      <input type="radio" name="correct[${index}]" value="0" checked>
+      <input type="text" name="options[${index}][]" placeholder="Option 1" required>
+    </div>
+
+    <div class="option">
+      <input type="radio" name="correct[${index}]" value="1">
+      <input type="text" name="options[${index}][]" placeholder="Option 2" required>
+    </div>
+
+    <div class="option">
+      <input type="radio" name="correct[${index}]" value="2">
+      <input type="text" name="options[${index}][]" placeholder="Option 3" required>
+    </div>
+
+    <div class="option">
+      <input type="radio" name="correct[${index}]" value="3">
+      <input type="text" name="options[${index}][]" placeholder="Option 4" required>
+    </div>
+
+    <small>Select the radio button next to the correct answer</small>
+  `;
+
+  container.appendChild(div);
+
+  questionCount++;
+  document.getElementById("count").innerText = questionCount;
+}
+</script>
+
+</body>
+</html>

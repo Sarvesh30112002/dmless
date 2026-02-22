@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Candidates</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+<div class="page-container">
+
+  <section class="page-hero">
+    <h1><%= job.jobRole %></h1>
+    <p>Detailed candidate list</p>
+  </section>
+
+  <section class="analytics-placeholder">
+    <h3>Analytics</h3>
+    <p>Advanced charts coming soon...</p>
+  </section>
+
+  <div class="table-wrapper">
+
+    <table class="data-table">
+
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Resume</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% candidates.forEach(c => { %>
+
+          <tr>
+            <td><%= c.fullName %></td>
+            <td><%= c.email %></td>
+
+            <td>
+              <% if(c.isKnockedOut){ %>
+                <span class="badge badge-red">Knocked</span>
+              <% }else{ %>
+                <span class="badge badge-green">Shortlisted</span>
+              <% } %>
+            </td>
+
+            <td>
+              <% if(c.resumeUrl){ %>
+                <a class="btn-small"
+                   href="<%= c.resumeUrl %>"
+                   target="_blank">
+                   Open
+                </a>
+              <% }else{ %>
+                <span class="muted">Not uploaded</span>
+              <% } %>
+            </td>
+          </tr>
+
+        <% }) %>
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Screening Result</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #1e3c72, #2a5298, #1abc9c, #16a085);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      padding: 20px;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card {
+      width: 100%;
+      max-width: 500px;
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      text-align: center;
+      color: white;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-size: 28px;
+    }
+
+    p {
+      margin-bottom: 25px;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .success {
+      color: #00ffcc;
+    }
+
+    .fail {
+      color: #ff6b6b;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .btn-success {
+      background: #00ffcc;
+      color: #003333;
+    }
+
+    .btn-success:hover {
+      background: #00ddb3;
+      transform: scale(1.05);
+    }
+
+    .btn-fail {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-fail:hover {
+      background: #ff4c4c;
+      transform: scale(1.05);
+    }
+
+    @media(max-width: 500px) {
+      .card {
+        padding: 25px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <% if(!passed){ %>
+
+      <h2 class="fail">❌ Screening Not Cleared</h2>
+      <p>
+        Thank you for applying.<br>
+        Unfortunately, you did not pass the screening test.
+      </p>
+
+      <a href="/" class="btn btn-fail">
+        Return Home
+      </a>
+
+    <% } else { %>
+
+      <h2 class="success">🎉 Congratulations!</h2>
+      <p>
+        You passed the screening test.<br>
+        Please upload your resume to continue.
+      </p>
+
+      <a href="/upload-resume/<%= candidateId %>" class="btn btn-success">
+        Upload Resume →
+      </a>
+
+    <% } %>
+
+  </div>
+
+</body>
+</html>

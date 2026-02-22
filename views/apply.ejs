@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apply – <%= job.jobRole %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #1e3c72, #2a5298, #1abc9c, #16a085);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      padding: 20px;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card {
+      width: 100%;
+      max-width: 650px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+      color: white;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    p.description {
+      margin-bottom: 25px;
+      opacity: 0.9;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .question-box {
+      background: rgba(255,255,255,0.15);
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+
+    .question-box:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .question-box p {
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .option {
+      margin-bottom: 8px;
+    }
+
+    .option input {
+      margin-right: 8px;
+      accent-color: #00ffcc;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #00ffcc;
+      color: #003333;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      background: #00ddb3;
+    }
+
+    @media(max-width: 500px) {
+      .card {
+        padding: 20px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <h2><%= job.jobRole %></h2>
+    <p class="description"><%= job.jobDescription %></p>
+
+    <form method="POST">
+
+      <label>Full Name</label>
+      <input type="text" name="fullName" required>
+
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <% job.mcqs.forEach((mcq, index) => { %>
+
+        <div class="question-box">
+
+          <p>Q<%= index + 1 %>. <%= mcq.question %></p>
+
+          <% mcq.options.forEach((opt, i) => { %>
+            <div class="option">
+              <label>
+                <input
+                  type="radio"
+                  name="q<%= index %>"
+                  value="<%= i %>"
+                  required
+                >
+                <%= opt %>
+              </label>
+            </div>
+          <% }) %>
+
+        </div>
+
+      <% }) %>
+
+      <button type="submit">Start Screening</button>
+
+    </form>
+
+  </div>
+
+</body>
+</html>

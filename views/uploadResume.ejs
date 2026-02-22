@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload Resume</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #1e3c72, #2a5298, #1abc9c, #16a085);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      padding: 20px;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card {
+      width: 100%;
+      max-width: 500px;
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      text-align: center;
+      color: white;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      font-size: 26px;
+    }
+
+    .file-input {
+      margin-bottom: 25px;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      cursor: pointer;
+    }
+
+    input[type="file"]::file-selector-button {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      background: #00ffcc;
+      color: #003333;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: 0.3s;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background: #00ddb3;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      background: #00ffcc;
+      color: #003333;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #00ddb3;
+      transform: scale(1.03);
+    }
+
+    .note {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    @media(max-width: 500px) {
+      .card {
+        padding: 25px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <h2>📄 Upload Your Resume</h2>
+
+    <p class="note">
+      Please upload your resume in PDF or DOC format.
+    </p>
+
+    <form
+      action="/upload-resume/<%= candidateId %>"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+
+      <div class="file-input">
+        <input
+          type="file"
+          name="resume"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn">
+        Upload Resume →
+      </button>
+
+    </form>
+
+  </div>
+
+</body>
+</html>

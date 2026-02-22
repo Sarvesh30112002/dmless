@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>dmless – Dashboard</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">dmless</div>
+
+  <div class="user-area">
+    <span><%= recruiter.email %></span>
+    <a href="/logout">Logout</a>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ===== Stats cards ===== -->
+
+  <section class="stats-row">
+
+    <div class="stat-card">
+      <div class="label">Total Applied</div>
+      <div class="value" id="totalApplied">0</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="label red">Knocked Out</div>
+      <div class="value" id="totalKnocked">0</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="label green">Shortlisted</div>
+      <div class="value" id="totalShortlisted">0</div>
+    </div>
+
+  </section>
+
+  <!-- ===== Heading row ===== -->
+
+  <div class="heading-row">
+    <h2>Your Hiring Links</h2>
+    <a href="/jobs/new" class="btn-primary">+ Create Link</a>
+  </div>
+
+  <!-- ===== Links area ===== -->
+
+  <div id="linksArea" class="links-area">
+    <div class="empty">
+      No hiring links yet. Create your first one!
+      <br><br>
+      <a href="/jobs/new" class="btn-primary">+ Create Link</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+async function loadDashboard(){
+
+  const res = await fetch("/dashboard/analytics/all");
+  const data = await res.json();
+
+  let totalApplied = 0;
+  let totalKnocked = 0;
+  let totalShortlisted = 0;
+
+  const container = document.getElementById("linksArea");
+
+  if(!data.length){
+    return;
+  }
+
+  let html = "";
+
+  data.forEach(job => {
+
+    totalApplied += job.totalCandidates;
+    totalKnocked += job.knockedOutCount;
+    totalShortlisted += job.shortlistedCount;
+
+    html += `
+  <div class="job-card">
+
+    <div class="job-info">
+      <h3>${job.jobRole}</h3>
+      <p>${job.jobDescription || ""}</p>
+    </div>
+
+    <div class="job-stats">
+      <span><strong>${job.totalCandidates}</strong><br>Applied</span>
+      <span style="color:red;">
+        <strong>${job.knockedOutCount}</strong><br>Knocked
+      </span>
+      <span style="color:green;">
+        <strong>${job.shortlistedCount}</strong><br>Shortlisted
+      </span>
+    </div>
+
+    <div class="job-actions">
+      <button class="btn-small" onclick="copyLink('${job.publicId}')">
+        Copy
+      </button>
+
+      <a class="btn-small"
+         href="/apply/${job.publicId}"
+         target="_blank">
+         ↗
+      </a>
+
+      <a class="btn-small"
+         href="/dashboard/job/${job.jobId}/candidates">
+         View
+      </a>
+    </div>
+
+  </div>
+`;
+  });
+
+  document.getElementById("totalApplied").innerText = totalApplied;
+  document.getElementById("totalKnocked").innerText = totalKnocked;
+  document.getElementById("totalShortlisted").innerText = totalShortlisted;
+
+  container.innerHTML = html;
+}
+
+loadDashboard();
+
+function copyLink(publicId){
+
+  const baseUrl = window.location.origin;
+  const link = baseUrl + "/apply/" + publicId;
+
+  navigator.clipboard.writeText(link)
+    .then(() => alert("Link copied!"))
+    .catch(err => console.error(err));
+}
+</script>
+
+</body>
+</html>

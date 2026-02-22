@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dmless – Recruiter Signup</title>
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+
+<div class="auth-container">
+
+  <h2>Create Recruiter Account</h2>
+
+  <% if (typeof error !== "undefined") { %>
+    <p class="error"><%= error %></p>
+  <% } %>
+
+  <form method="POST" action="/signup">
+
+    <input class="form-input"
+      type="text"
+      name="name"
+      placeholder="Full name"
+      required
+    />
+
+    <input class="form-input"
+      type="email"
+      name="email"
+      placeholder="Email"
+      required
+    />
+
+    <input class="form-input"
+      type="password"
+      name="password"
+      placeholder="Password"
+      required
+    />
+
+    <button type="submit">
+      Create account
+    </button>
+
+  </form>
+
+  <p class="small">
+    Already have account?
+    <a href="/login">Login</a>
+  </p>
+
+</div>
+
+</body>
+</html>

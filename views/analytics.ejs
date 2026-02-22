@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Analytics</title>
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#f5f6fa;
+      padding:20px;
+    }
+
+    h1{
+      margin-bottom:20px;
+    }
+
+    .job-card{
+      background:white;
+      padding:16px;
+      border-radius:8px;
+      margin-bottom:15px;
+      box-shadow:0 0 6px rgba(0,0,0,0.08);
+    }
+
+    .row{
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .box{
+      background:#f1f2f6;
+      padding:10px 14px;
+      border-radius:6px;
+      min-width:150px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Hiring Analytics</h1>
+
+<div id="analyticsContainer">
+  Loading...
+</div>
+
+<script>
+async function loadAnalytics(){
+
+  const res = await fetch("/dashboard/analytics/all");
+
+  const data = await res.json();
+
+  const container = document.getElementById("analyticsContainer");
+
+  if(!data.length){
+    container.innerHTML = "No jobs found";
+    return;
+  }
+
+  let html = "";
+
+  data.forEach(job => {
+
+    html += `
+      <div class="job-card">
+        <h3>${job.jobRole}</h3>
+        <small>Hiring Link ID: ${job.publicId}</small>
+
+        <div class="row">
+          <div class="box">Total: ${job.totalCandidates}</div>
+          <div class="box">Shortlisted: ${job.shortlistedCount}</div>
+          <div class="box">Knocked Out: ${job.knockedOutCount}</div>
+          <div class="box">Resumes: ${job.resumeUploadedCount}</div>
+        </div>
+      </div>
+    `;
+
+  });
+
+  container.innerHTML = html;
+}
+
+loadAnalytics();
+</script>
+
+</body>
+</html>
