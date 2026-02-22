@@ -13,10 +13,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Static
+// Static files
 app.use(express.static(path.join(__dirname, "../public")));
 
-// View engine
+// View Engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views"));
 
@@ -27,35 +27,15 @@ app.use(require("../routes/jobRoutes"));
 app.use(require("../routes/candidateRoutes"));
 app.use(require("../routes/analyticsRoutes"));
 
-// Mongo connection (IMPORTANT FIX)
-let isConnected = false;
-
-async function connectDB() {
-  if (isConnected) return;
-
-  const db = await mongoose.connect(process.env.MONGO_URI);
-  isConnected = db.connections[0].readyState === 1;
-  console.log("MongoDB Connected");
+// MongoDB Connection (IMPORTANT: prevent multiple connections)
+if (!mongoose.connections[0].readyState) {
+  mongoose.connect(process.env.MONGO_URI);
 }
 
-// Root route
-app.get("/", async (req, res) => {
-  await connectDB();
+// Home route
+app.get("/", (req, res) => {
   res.render("home");
-});
-
-// Ensure DB connects before any request
-app.use(async (req, res, next) => {
-  await connectDB();
-  next();
 });
 
 // Export for Vercel
 module.exports = app;
-
-// Local only
-if (process.env.NODE_ENV !== "production") {
-  app.listen(5000, () => {
-    console.log("Server running on http://localhost:5000");
-  });
-}
